@@ -7,13 +7,8 @@ const fetchRegister = async (data) => {
     formData.append('password', data.password);
     formData.append('location', data.location);
     formData.append('date', data.date);
-    /* if (data.avatar) {
-        formData.append('avatar', {
-            type: 'image/' + data.type,
-            name: 'avatar.' + data.type,
-            uri: data.avatar
-        });
-    } */
+    formData.append('avatar', data.avatar);
+    
     let request = await fetch('http://localhost:8000/users/register', {
         method: 'POST',
         body: formData,
@@ -24,4 +19,19 @@ const fetchRegister = async (data) => {
     return await request.json();
 }
 
-module.exports = { fetchRegister}
+const fetchLogin = async (data) => {
+    let formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+
+    let request = await fetch('http://localhost:8000/users/login', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            "Accept": "application/json"
+        }
+    })
+    return await request.json();
+}
+
+module.exports = { fetchRegister, fetchLogin }

@@ -16,6 +16,7 @@ app.use(express.urlencoded({extended: false}));
 
 // ---- USERS
 app.use("/users",authRoutes);
+app.use("/users",authRoutes);
 
 
 app.listen(port, () => {

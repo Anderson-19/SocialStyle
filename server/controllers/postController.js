@@ -7,7 +7,7 @@ const { post } = require('../models/Post');
 
 
 
-const addPost = passport.authenticate('jwt', { session: false })? (req, res):(req, res) => {
+const addPost = passport.authenticate('jwt', { session: false }); (req, res) => {
 
    
     
@@ -33,7 +33,7 @@ const getPosts = (req, res) => {
 				.catch(err => console.log(err))
 };
 
-const followingPosts = passport.authenticate('jwt', { session: false })? (req, res):(req, res) => {
+const followingPosts = passport.authenticate('jwt', { session: false }); (req, res) => {
 	
 			Post.find({
 				'user.id': { $in: req.user.following }
@@ -54,6 +54,6 @@ const userPost = (req, res) => {
 module.exports = {
     addPost,
     getPosts,
-    userLogin,
+   followingPosts,
     userPost
 }

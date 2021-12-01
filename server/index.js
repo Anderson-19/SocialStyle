@@ -7,6 +7,8 @@ const app = express();
 
 const authRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
+const searchRoutes = require("./routes/searchRoutes");
+
 
 const port = process.env.PORT || 8000;
 
@@ -24,6 +26,10 @@ app.use("/post",postRoutes);
 app.use("/post",postRoutes);
 app.use("/post",postRoutes);
 app.use("/post",postRoutes);
+
+// ---- SEARCH
+app.use("/search",searchRoutes);
+app.use("/search",searchRoutes);
 
 
 app.listen(port, () => {

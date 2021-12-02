@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
-import { ActivityIndicator, ScrollView, ToastAndroid, TextInput, Button, View, StyleSheet, Text, Image} from 'react-native';
+import { ActivityIndicator, ScrollView, ToastAndroid, TextInput, View, StyleSheet, ImageBackground, Dimensions} from 'react-native';
+import { Text, Input, Button, Card} from 'react-native-elements';
 import { fetchRegister } from '../services/usersServices';
 
 
@@ -22,28 +23,46 @@ export default function register() {
     } */
   return (
     <ScrollView>
-        <Text style={{textAlign: 'center', marginTop:'10%', fontSize:25, fontFamily:'Arial'}}>Sing Up</Text>
+        <ImageBackground 
+        source={require('./images/back.jpeg')}
+        style={{height: Dimensions.get('window').height/2.5,
+    }}>
+        
+        <View style={styles.brandView}>
+        
+         <Text style={{color: 'black', fontSize: 30,fontFamily:'impact',fontWeight: 'bold', textTransform:'uppercase', textAlign: 'center'  }}>Social Style<Card.Image
+    style={styles.avatar}
+    source={{ uri: 'https://help.twitter.com/content/dam/help-twitter/brand/logo.png' }} /></Text>
+        </View>
+
+        </ImageBackground>
+
+        <View style={styles.bottomView} >
+
+        
+
+        <Text style={{textAlign: 'center', marginTop:'5%', fontSize:25, fontFamily:'Arial'}}>Sign Up</Text>
         {/* <Image source={{uri: 'https://toppng.com/uploads/preview/user-font-awesome-nuevo-usuario-icono-11563566658mjtfvilgcs.png'}}></Image> */}
         <View> 
-            <TextInput onChangeText={(value) => {setName(value)}} placeholder="Username" style={styles.input}></TextInput>
+            <Input onChangeText={(value) => {setName(value)}}  label={'Username'} style={styles.input}></Input>
         </View> 
         <View>
-            <TextInput onChangeText={(value) => {setUsername(value)}} placeholder="Name" style={styles.input}/>
+            <Input onChangeText={(value) => {setUsername(value)}} label={'Name'} style={styles.input}/>
         </View>
         <View>
-            <TextInput onChangeText={(value) => {setLastname(value)}} placeholder="LastName" style={styles.input}></TextInput>
+            <Input onChangeText={(value) => {setLastname(value)}}  label={'Last Name'} style={styles.input}></Input>
         </View> 
         <View>
-            <TextInput onChangeText={(value) => {setEmail(value)}} placeholder="Email" style={styles.input}></TextInput>
+            <Input onChangeText={(value) => {setEmail(value)}}  label={'Email'} style={styles.input}></Input>
         </View> 
         <View> 
-            <TextInput onChangeText={(value) => {setPassword(value)}} placeholder="Password" style={styles.input}></TextInput>
+            <Input onChangeText={(value) => {setPassword(value)}}  label={'Password'} style={styles.input}></Input>
         </View>
         <View> 
-            <TextInput onChangeText={(value) => {setLocation(value)}} placeholder="Location" style={styles.input}></TextInput>
+            <Input onChangeText={(value) => {setLocation(value)}} label={'Location'} style={styles.input}></Input>
         </View>
         <View>
-            <TextInput onChangeText={(value) => {setDate(value)}} placeholder="Date Of Brith" style={styles.input}></TextInput>
+            <Input onChangeText={(value) => {setDate(value)}} label={'Date Of Birth'} style={styles.input}></Input>
         </View>
     
         <Button title={buttonTitle} onPress={() =>{
@@ -67,16 +86,56 @@ export default function register() {
                 //ToastAndroid.showWithGravity(json.content, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
             });
         }} icon={<ActivityIndicator color={'#e94560'} animating={loading} />} disabled={loading}/>  
+       
+       
+         </View>
+       
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+    container:{
+        
+        /** marginTop: 80, **/
+        flex: 1,
+        flexDirection: "column",
+        
+        
+    },
+     avatar:{
+        width: '80px',
+        height: '80px', 
+        borderRadius:'50%',
+        justifyContent: "center",
+        alignItems: "center",
+        
+    }, 
     input: {
-        height: 40,
-        margin: 12,
+        height: 30,
+        margin: 20,
         borderWidth: 2,
-        padding: 8,
+        padding: 2,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: 'center',
+        borderColor:'white'
+        
+    },
+    
+    brandView: {
+        flex:1,
+        justifyContent: 'center',
+        paddingBottom:60,
+        
+    },
+    bottomView: {
+        flex: 1.5,
+        backgroundColor: 'white',
+        bottom: 50,
+        borderTopStartRadius: 60,
+        borderTopEndRadius: 60,
+       
     },
     
 });

@@ -27,7 +27,7 @@ export default function register() {
         source={require('./images/back.jpeg')}
         style={{height: Dimensions.get('window').height/2.5,
     }}>
-
+        
         <View style={styles.brandView}>
         
          <Text style={{color: 'black', fontSize: 30,fontFamily:'impact',fontWeight: 'bold', textTransform:'uppercase', textAlign: 'center'  }}>Social Style<Card.Image

@@ -34,4 +34,15 @@ const fetchLogin = async (data) => {
     return await request.json();
 }
 
-module.exports = { fetchRegister, fetchLogin }
+const getUsers = async (sessionToken) =>{
+    let request = await fetch('http://localhost:8000/post/show', {
+        method: 'GET',
+        headers: {
+            'authToken': sessionToken,
+            "Accept": "application/json"
+        }
+    })
+    return await request.json();
+}
+
+module.exports = { fetchRegister, fetchLogin, getUsers }

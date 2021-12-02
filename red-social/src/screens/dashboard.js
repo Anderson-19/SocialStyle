@@ -29,9 +29,7 @@ function Dashboard(props) {
 
     const filtrar=(terminoBusqueda)=>{
         let resultadosBusqueda = post.filter((elemento)=>{
-          if(elemento.description.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()/* )
-          || elemento.company.name.toString().toLowerCase().includes(terminoBusqueda.toLowerCase() */)
-          ){
+          if(elemento.description.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
             return elemento;
           }
         });

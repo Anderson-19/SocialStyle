@@ -82,8 +82,9 @@ export default function register() {
             then(json => {
                 setButtonTitle('Register');
                 setLoading(false);
-                console.log(json)
-                //ToastAndroid.showWithGravity(json.content, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+                if(json.verify){
+                    navigation.navigate('Login');
+                }
             });
         }} icon={<ActivityIndicator color={'#e94560'} animating={loading} />} disabled={loading}/>  
        

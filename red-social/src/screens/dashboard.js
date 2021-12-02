@@ -1,51 +1,60 @@
 import React, { useEffect, useState} from 'react';
-import { View, StyleSheet, Pressable, ScrollView, SafeAreaView, FlatList } from 'react-native';
+import { View, StyleSheet, Pressable, ScrollView, ActivityIndicator} from 'react-native';
 import { connect } from 'react-redux';
-import { Input, Text, Icon, Avatar, Card } from 'react-native-elements';
-//import { getPosts } from '../services/postServices';
+import { Input, Text, Icon, Avatar, Card, ListItem, Image } from 'react-native-elements';
+import { getPosts, deletePost, getSearchPosts } from '../services/postServices';
 
-function Dashboard({navigation, sessionToken, name, email, avatar}) {
-    let [description, setDescription] = useState([]);
+function Dashboard(props) {
+    const [post, setPost] = useState([]);
+    const [tablaPost, setTablaPost]= useState([]);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState({
+        posts: '',
+        users: ''
+    })
 
-/*     useEffect(()=>{
-        getPosts(sessionToken).
+    const getSearch = (name, value) =>{
+        setSearch({...search, [name]: value})
+        filtrar(search.posts);
+    }
+
+    useEffect(()=>{
+ 
+        getPosts(props.sessionToken).
         then( json =>{
-            json.content.forEach(element => {
-                setDescription(description.push(element.description));
-            });
-            //setDescription(json.description);
-            console.log("DESCRIPCION: "+description);
+           setPost(json.content)
+           setLoading(false)
         }) 
-    },[]) */
+    })
 
+    const filtrar=(terminoBusqueda)=>{
+        let resultadosBusqueda = post.filter((elemento)=>{
+          if(elemento.description.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()/* )
+          || elemento.company.name.toString().toLowerCase().includes(terminoBusqueda.toLowerCase() */)
+          ){
+            return elemento;
+          }
+        });
+        setTablaPost(resultadosBusqueda);
+      }
+    
+  if(loading){
+    return(
+        <View>
+            <ActivityIndicator color='#9e9e9e' size='large' />
+        </View>
+    )
+  }
   return (
       <ScrollView>
         <View style={{ flex: 1 }}>
             <Input
             placeholder={'Search something'}
             style={styles.textStyle}
-            /*  onChangeText={text =>
-                this.setState({...this.state, search: text})
-            } */
-            leftIcon={
-                <Pressable
-                android_ripple={{
-                    color: 'gray',
-                    borderless: true,
-                }}
-                /* onPress={() =>
-                    this.props.navigation.navigate('ProfileModal', {
-                    deviceUser: true,
-                    user_id: this.props.state.id,
-                    })
-                } */>
-                </Pressable>
-            }
+            onChangeText={(text) => getSearch("posts", text)} 
             rightIcon={
                 <>
-                {/* true? (
-                    <ActivityIndicator color={'lime'} />
-                ) : ( */
+                {
                     <Pressable
                     android_ripple={{
                         color: 'gray',
@@ -54,99 +63,216 @@ function Dashboard({navigation, sessionToken, name, email, avatar}) {
                     /* onPress={this.search} */>
                     <Icon type={'font-awesome-5'} name={'search'} />
                     </Pressable>
-                /* ) */}
+                }
                 </>
             }
             />
-        </View>
-        <View>
-            <Card>
-                <Avatar
-                    source={{
-                    uri: avatar,
-                    headers: {Range: 'bytes=0-'},
-                    }}
-                    rounded
-                    size={'medium'}
-                />
-                <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{name}</Text>
-                {/* {description.forEach(item =>{
-                    <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{item}</Text>
+            {search.posts.length > 0 ? (
+                tablaPost.map(items =>{
+                    return(
+                        <ListItem key={items._id} bottomDivider>
+                            <ListItem.Chevron /> 
+                            <ListItem.Content>
+                                <View>
+                                    <Avatar
+                                        source={{
+                                        uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png',
+                                        headers: {Range: 'bytes=0-'},
+                                        }}
+                                        rounded
+                                        size={'medium'}
+                                    />
+                                    <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{props.name}</Text>
+                                    <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{items.description}</Text> 
+                                    <Image
+                                      source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png' }}
+                                      style={{ width: 300, height: 300 }}
+                                      PlaceholderContent={<ActivityIndicator />}
+                                    />
+                                    <Card.Divider />
+                                        <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
+                                    <Card.Divider />
+                                </View>
+                                <View style={styles.viewStyle}>
+                                    {/* this.props.ownerButtons */true ? (
+                                        <>
+                                        <Pressable
+                                            android_ripple={{color: 'gray', borderless: true}}
+                                            onPress={()=>{
+                                                deletePost(post._id, props.sessionToken).then(
+                                                    res =>{
+                                                        getPosts(props.sessionToken).
+                                                        then( json =>{
+                                                           setPost(json.content)
+                                                           setLoading(false)
+                                                        })
+                                                    }
+                                                )
+                                            }} >
+                                            <Icon
+                                            style={styles.iconStyle}
+                                            color={/* this.state.loading ?  */'gray'/*  : 'red' */}
+                                            name={'trash'}
+                                            type={'font-awesome-5'}
+                                            />
+                                        </Pressable>
+                                        <Pressable
+                                            android_ripple={{color: 'gray', borderless: true}}
+                                            onPress={() =>{ props.navigation.navigate('EditPost',{post_id: post._id})}} >
+                                            <Icon style={styles.iconStyle} name={'pen'} type={'font-awesome-5'} />
+                                        </Pressable>
+                                        </>
+                                    ) : null}
+                                    <Pressable
+                                        android_ripple={{color: 'gray', borderless: true}}
+                                        /* onPress={this.props.onCommentPress} */>
+                                        <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
+                                    </Pressable>
+                                    <Pressable
+                                        android_ripple={{color: 'gray', borderless: true}}
+                                        /* onPress={() => this.interact('dislike')} */>
+                                        <Icon
+                                        style={styles.iconStyle}
+                                        name={'thumbs-down'}
+                                        type={'font-awesome-5'}
+                                        color={
+                                            /* this.state.loading
+                                            ? 'gray'
+                                            : this.state.interaction.dislike === 'ADD'
+                                            ? */ 'black'
+                                            /* : 'red' */
+                                        }
+                                        solid={/* this.state.interaction.dislike === */ 'REMOVE'}
+                                        />
+                                    </Pressable>
+                                    <Pressable
+                                        android_ripple={{color: 'gray', borderless: true}}
+                                        /* onPress={() => this.interact('like')} */>
+                                        <Icon
+                                        style={styles.iconStyle}
+                                        name={'thumbs-up'}
+                                        type={'font-awesome-5'}
+                                        color={
+                                            /* this.state.loading
+                                            ? 'gray'
+                                            : this.state.interaction.like === 'ADD'
+                                            ? */ 'black'
+                                            /* : 'lime' */
+                                        }
+                                        solid={/* this.state.interaction.like ===  */'REMOVE'}
+                                        />
+                                    </Pressable>
+                                </View>
+                            </ListItem.Content>
+                        </ListItem>
+                        )
                 })
-                } */}
-                <Card.Image
-                    source={{ uri: avatar }} 
-                />
-                <Card.Divider />
-                    <Text style={ styles.textActions}>{`${1} likes | ${1} dislikes | ${1} comments`}</Text>
-                <Card.Divider />
-                <View style={styles.viewStyle}>
-                    {/* this.props.ownerButtons */true ? (
-                        <>
-                        <Pressable
-                            android_ripple={{color: 'gray', borderless: true}}
-                           /*  onPress={this.deletePost} */>
-                            <Icon
-                            style={styles.iconStyle}
-                            color={/* this.state.loading ?  */'gray'/*  : 'red' */}
-                            name={'trash'}
-                            type={'font-awesome-5'}
-                            />
-                        </Pressable>
-                        <Pressable
-                            android_ripple={{color: 'gray', borderless: true}}
-                            /* onPress={this.props.onEditPress} */>
-                            <Icon style={styles.iconStyle} name={'pen'} type={'font-awesome-5'} />
-                        </Pressable>
-                        </>
-                    ) : null}
-                    <Pressable
-                        android_ripple={{color: 'gray', borderless: true}}
-                        /* onPress={this.props.onCommentPress} */>
-                        <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
-                    </Pressable>
-                    <Pressable
-                        android_ripple={{color: 'gray', borderless: true}}
-                        /* onPress={() => this.interact('dislike')} */>
-                        <Icon
-                        style={styles.iconStyle}
-                        name={'thumbs-down'}
-                        type={'font-awesome-5'}
-                        color={
-                            /* this.state.loading
-                            ? 'gray'
-                            : this.state.interaction.dislike === 'ADD'
-                            ? */ 'black'
-                            /* : 'red' */
-                        }
-                        solid={/* this.state.interaction.dislike === */ 'REMOVE'}
-                        />
-                    </Pressable>
-                    <Pressable
-                        android_ripple={{color: 'gray', borderless: true}}
-                        /* onPress={() => this.interact('like')} */>
-                        <Icon
-                        style={styles.iconStyle}
-                        name={'thumbs-up'}
-                        type={'font-awesome-5'}
-                        color={
-                            /* this.state.loading
-                            ? 'gray'
-                            : this.state.interaction.like === 'ADD'
-                            ? */ 'black'
-                            /* : 'lime' */
-                        }
-                        solid={/* this.state.interaction.like ===  */'REMOVE'}
-                        />
-                    </Pressable>
-                </View>
-                {/* <SafeAreaView  >
-                <FlatList
-                    data={[description]}
-                    renderItem={({item}) => <Text>{item.item}</Text>}
-                    />  
-                </SafeAreaView> */}
-            </Card>
+            
+            ):(
+                post.map(post =>{
+                    return(
+                        <ListItem key={post._id} bottomDivider>
+                            <ListItem.Chevron /> 
+                            <ListItem.Content>
+                                <View>
+                                    <Avatar
+                                        source={{
+                                        uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png',
+                                        headers: {Range: 'bytes=0-'},
+                                        }}
+                                        rounded
+                                        size={'medium'}
+                                    />
+                                    <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{props.name}</Text>
+                                    <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{post.description}</Text> 
+                                    <Image
+                                      source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png' }}
+                                      style={{ width: 300, height: 300 }}
+                                      PlaceholderContent={<ActivityIndicator />}
+                                    />
+                                    <Card.Divider />
+                                        <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
+                                    <Card.Divider />
+                                </View>
+                                <View style={styles.viewStyle}>
+                                    {/* this.props.ownerButtons */true ? (
+                                        <>
+                                        <Pressable
+                                            android_ripple={{color: 'gray', borderless: true}}
+                                            onPress={()=>{
+                                                deletePost(post._id, props.sessionToken).then(
+                                                    res =>{
+                                                        getPosts(props.sessionToken).
+                                                        then( json =>{
+                                                           setPost(json.content)
+                                                           setLoading(false)
+                                                        })
+                                                    }
+                                                )
+                                            }} >
+                                            <Icon
+                                            style={styles.iconStyle}
+                                            color={/* this.state.loading ?  */'gray'/*  : 'red' */}
+                                            name={'trash'}
+                                            type={'font-awesome-5'}
+                                            />
+                                        </Pressable>
+                                        <Pressable
+                                            android_ripple={{color: 'gray', borderless: true}}
+                                            onPress={() =>{ props.navigation.navigate('EditPost',{post_id: post._id})}} >
+                                            <Icon style={styles.iconStyle} name={'pen'} type={'font-awesome-5'} />
+                                        </Pressable>
+                                        </>
+                                    ) : null}
+                                    <Pressable
+                                        android_ripple={{color: 'gray', borderless: true}}
+                                        /* onPress={this.props.onCommentPress} */>
+                                        <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
+                                    </Pressable>
+                                    <Pressable
+                                        android_ripple={{color: 'gray', borderless: true}}
+                                        /* onPress={() => this.interact('dislike')} */>
+                                        <Icon
+                                        style={styles.iconStyle}
+                                        name={'thumbs-down'}
+                                        type={'font-awesome-5'}
+                                        color={
+                                            /* this.state.loading
+                                            ? 'gray'
+                                            : this.state.interaction.dislike === 'ADD'
+                                            ? */ 'black'
+                                            /* : 'red' */
+                                        }
+                                        solid={/* this.state.interaction.dislike === */ 'REMOVE'}
+                                        />
+                                    </Pressable>
+                                    <Pressable
+                                        android_ripple={{color: 'gray', borderless: true}}
+                                        /* onPress={() => this.interact('like')} */>
+                                        <Icon
+                                        style={styles.iconStyle}
+                                        name={'thumbs-up'}
+                                        type={'font-awesome-5'}
+                                        color={
+                                            /* this.state.loading
+                                            ? 'gray'
+                                            : this.state.interaction.like === 'ADD'
+                                            ? */ 'black'
+                                            /* : 'lime' */
+                                        }
+                                        solid={/* this.state.interaction.like ===  */'REMOVE'}
+                                        />
+                                    </Pressable>
+                                </View>
+                            </ListItem.Content>
+                        </ListItem>
+                    )
+                })
+
+            )
+            }
+                
+               
         </View>
       </ScrollView>
   );
@@ -173,16 +299,16 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     textActions:{
-        color: 'gray',
+        color: '#00aae4',
         fontWeight: 'bold',
         fontSize: 14,
         fontStyle: 'italic',
-        alignSelf: 'flex-end',
-        marginRight: 10,
+        marginLeft: 25
     },
     iconStyle:{
         paddingLeft: 5,
         paddingRight: 10,
+        marginLeft: 16
     },
     viewStyle:{
         display: 'flex',

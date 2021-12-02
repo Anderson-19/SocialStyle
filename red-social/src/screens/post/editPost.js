@@ -7,7 +7,7 @@ import { getPost, updatePost, getPosts } from '../../services/postServices';
 function EditPost (props){
     const initialState = {
         post_id: '',
-        description: '',
+        comment: '',
     }
   const [post, setPost] = useState(initialState);
   const [loading, setLoading] = useState(true);
@@ -17,8 +17,9 @@ function EditPost (props){
   }
 
   useEffect(() =>{
-      getPost(props.route.params.post_id, props.sessionToken).then(
-          json =>{
+
+      getPost(props.route.params.post_id, props.sessionToken).then( json =>{
+            console.log(json.content)
             setPost({
                 ...json.content,
                 post_id: props.route.params.post_id
@@ -53,7 +54,7 @@ function EditPost (props){
           multiline
           maxLength={150}
           value={post.description}
-          onChangeText={(value) => handleChangeText("description", value)}  
+          onChangeText={(value) => handleChangeText("comment", value)}  
           rightIcon={
             <>
                 <Pressable

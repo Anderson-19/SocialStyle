@@ -44,7 +44,6 @@ function Login({navigation, reduxSaveSessionToken, reduxUserDataName, reduxUserD
                 disabled={loading}
                 icon={<ActivityIndicator color={'#e94560'} animating={loading} />}
                 onPress={() =>{
-                    navigation.navigate('Modal');
                     setButtonTitle('');
                     setLoading(true);
                     let data = {

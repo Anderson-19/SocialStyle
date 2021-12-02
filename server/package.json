@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +17,7 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13",
-    "multiparty": "^4.2.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
+    "multiparty": "^4.2.2",
+    "pg": "^8.7.1"
   }
 }

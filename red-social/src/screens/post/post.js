@@ -7,7 +7,7 @@ import { createPost, getPosts } from '../../services/postServices';
 function Post (props){
   const initialState = {
     post_id: '',
-    description: '',
+    comment: '',
   }
   const [post, setPost] = useState(initialState);
 
@@ -31,14 +31,14 @@ function Post (props){
         <Input
           multiline
           maxLength={150}
-          onChangeText={(value) => handleChangeText("description", value)}  
+          onChangeText={(value) => handleChangeText("comment", value)}  
           placeholder={'Post something'}
           rightIcon={
             <>
                 <Pressable
                   onPress={() =>{
                     let data ={
-                      description: post.description, 
+                      comment: post.comment, 
                       sessionToken: props.sessionToken
                     }
 

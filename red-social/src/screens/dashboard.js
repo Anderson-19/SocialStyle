@@ -19,7 +19,6 @@ function Dashboard(props) {
     }
 
     useEffect(()=>{
- 
         getPosts(props.sessionToken).
         then( json =>{
            setPost(json.content)
@@ -82,11 +81,11 @@ function Dashboard(props) {
                                     />
                                     <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{props.name}</Text>
                                     <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{items.description}</Text> 
-                                    <Image
+                                    {/* <Image
                                       source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png' }}
                                       style={{ width: 300, height: 300 }}
                                       PlaceholderContent={<ActivityIndicator />}
-                                    />
+                                    /> */}
                                     <Card.Divider />
                                         <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                     <Card.Divider />
@@ -183,11 +182,11 @@ function Dashboard(props) {
                                     />
                                     <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{props.name}</Text>
                                     <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{post.description}</Text> 
-                                    <Image
+                                    {/* <Image
                                       source={{ uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png' }}
                                       style={{ width: 300, height: 300 }}
                                       PlaceholderContent={<ActivityIndicator />}
-                                    />
+                                    /> */}
                                     <Card.Divider />
                                         <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                     <Card.Divider />

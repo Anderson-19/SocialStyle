@@ -1,3 +1,5 @@
+const URI = 'http://localhost:8000';
+
 const fetchRegister = async (data) => {
     let formData = new FormData();
     formData.append('name', data.name);
@@ -9,7 +11,7 @@ const fetchRegister = async (data) => {
     formData.append('date', data.date);
     formData.append('avatar', data.avatar);
     
-    let request = await fetch('http://localhost:8000/users/register', {
+    let request = await fetch(`${URI}/users/register`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -24,7 +26,7 @@ const fetchLogin = async (data) => {
     formData.append('email', data.email);
     formData.append('password', data.password);
 
-    let request = await fetch('http://localhost:8000/users/login', {
+    let request = await fetch(`${URI}/users/login`, {
         method: 'POST',
         body: formData,
         headers: {

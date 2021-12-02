@@ -4,7 +4,7 @@ import { Text, Input, Button, Card} from 'react-native-elements';
 import { fetchRegister } from '../services/usersServices';
 
 
-export default function register() {
+export default function register(props) {
     let [name, setName] = useState('');
     let [username, setUsername] = useState('');
     let [lastname, setLastname] = useState('');
@@ -75,7 +75,8 @@ export default function register() {
                 email: email,
                 password: password,
                 location: location,
-                date: date
+                date: date,
+                avatar:'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png'
             }
 
             fetchRegister(data).
@@ -83,7 +84,7 @@ export default function register() {
                 setButtonTitle('Register');
                 setLoading(false);
                 if(json.verify){
-                    navigation.navigate('Login');
+                    props.navigation.navigate('Login');
                 }
             });
         }} icon={<ActivityIndicator color={'#e94560'} animating={loading} />} disabled={loading}/>  

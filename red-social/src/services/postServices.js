@@ -1,9 +1,11 @@
+const URI = 'http://localhost:8000'
+
 const createPost = async (data) => {
     let formData = new FormData();
     formData.append('token', data.sessionToken);
-    formData.append('description', data.description);
+    formData.append('description', data.comment);
     
-    let request = await fetch('http://localhost:8000/post/create', {
+    let request = await fetch(`${URI}/post/create`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -15,7 +17,7 @@ const createPost = async (data) => {
 
 const getPosts = async (sessionToken) => {
 
-    let request = await fetch('http://localhost:8000/post/show', {
+    let request = await fetch(`${URI}/post/show`, {
         method: 'GET',
         headers: {
             'authToken': sessionToken,
@@ -26,7 +28,7 @@ const getPosts = async (sessionToken) => {
 }
 
 const getPost = async (id, sessionToken) => {
-    let request = await fetch(`http://localhost:8000/post/${id}`, {
+    let request = await fetch(`${URI}/post/${id}`, {
         method: 'GET',
         headers: {
             'authToken': sessionToken,
@@ -40,7 +42,7 @@ const getSearchPosts = async (xdata) =>{
     let formData = new FormData();
     formData.append('token', xdata.sessionToken);
     formData.append('postSearch', xdata.postSearch);
-    let request = await fetch('http://localhost:8000/post/search', {
+    let request = await fetch(`${URI}/post/search`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -56,7 +58,7 @@ const updatePost = async (data, sessionToken) => {
         description: data.description
     }
     
-    let request = await fetch('http://localhost:8000/post/update', {
+    let request = await fetch(`${URI}/post/update`, {
         method: 'PUT',
         body: JSON.stringify(xdata),
         headers: {
@@ -69,7 +71,7 @@ const updatePost = async (data, sessionToken) => {
 
 const deletePost = async (post_id, sessionToken) => {
     
-    let request = await fetch(`http://localhost:8000/post/delete/${post_id}`, {
+    let request = await fetch(`${URI}/post/delete/${post_id}`, {
         method: 'DELETE',
         headers: {
             'authToken': sessionToken

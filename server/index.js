@@ -24,7 +24,8 @@ app.use("/post",postRoutes);
 app.use("/post",postRoutes);
 app.use("/post",postRoutes);
 app.use("/post",postRoutes);
-
+app.use("/post",postRoutes);
+app.use("/post",postRoutes);
 
 app.listen(port, () => {
     console.log("Server running at port: " + port);

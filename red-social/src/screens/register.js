@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
-import { ActivityIndicator, ScrollView, ToastAndroid, TextInput, Button, View, StyleSheet, Text, Image} from 'react-native';
+import { ActivityIndicator, ScrollView, ToastAndroid, TextInput, View, StyleSheet, ImageBackground, Dimensions} from 'react-native';
+import { Text, Input, Button, Card} from 'react-native-elements';
 import { fetchRegister } from '../services/usersServices';
 
 
@@ -22,7 +23,22 @@ export default function register() {
     } */
   return (
     <ScrollView>
-        <Text style={{textAlign: 'center', marginTop:'10%', fontSize:25, fontFamily:'Arial'}}>Sing Up</Text>
+        <ImageBackground 
+        source={require('./images/backgroundImage.jpeg')}
+        style={{height: Dimensions.get('window').height/2.5,
+    }}>
+
+        <View style={styles.brandView}>
+        
+         <Text style={{color: 'black', fontSize: 30,fontFamily:'impact',fontWeight: 'bold', textTransform:'uppercase', textAlign: 'center'  }}>Social Style<Card.Image
+    style={styles.avatar}
+    source={{ uri: 'https://help.twitter.com/content/dam/help-twitter/brand/logo.png' }} /></Text>
+        </View>
+        </ImageBackground>
+
+        <View style={styles.bottomView} >
+
+        <Text style={{textAlign: 'center', marginTop:'10%', fontSize:25, fontFamily:'Arial'}}>Sign Up</Text>
         {/* <Image source={{uri: 'https://toppng.com/uploads/preview/user-font-awesome-nuevo-usuario-icono-11563566658mjtfvilgcs.png'}}></Image> */}
         <View> 
             <TextInput onChangeText={(value) => {setName(value)}} placeholder="Username" style={styles.input}></TextInput>
@@ -67,16 +83,52 @@ export default function register() {
                 //ToastAndroid.showWithGravity(json.content, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
             });
         }} icon={<ActivityIndicator color={'#e94560'} animating={loading} />} disabled={loading}/>  
+        </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+    container:{
+        
+        /** marginTop: 80, **/
+        flex: 1,
+        flexDirection: "column",
+        
+        
+    },
+     avatar:{
+        width: '80px',
+        height: '80px', 
+        borderRadius:'50%',
+        opacity: 0.8,
+        justifyContent: "center",
+        alignItems: "center"
+    }, 
     input: {
-        height: 40,
-        margin: 12,
+        height: 30,
+        margin: 10,
         borderWidth: 2,
         padding: 8,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: 'center',
+        borderColor:'black'
+        
+    },
+    
+    brandView: {
+        flex:1,
+        justifyContent: 'center',
+        paddingBottom:60,
+    },
+    bottomView: {
+        flex: 1.5,
+        backgroundColor: 'white',
+        bottom: 50,
+        borderTopStartRadius: 60,
+        borderTopEndRadius: 60,
+       
     },
     
 });

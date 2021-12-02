@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
-import { ActivityIndicator, ScrollView, View, StyleSheet, ToastAndroid } from 'react-native';
-import { Text, Input, Button, Card } from 'react-native-elements';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ToastAndroid, ImageBackground, Dimensions } from 'react-native';
+import { Text, Input, Button, Card} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { saveSessionToken } from '../../state/actions/saveSessionToken';
 import { saveUserName, saveUserEmail, saveUserAvatar } from '../../state/actions/saveUserData';
@@ -13,17 +13,30 @@ function Login({navigation, reduxSaveSessionToken, reduxUserDataName, reduxUserD
     let [loading, setLoading] = useState(false);
 
   return (
-    <ScrollView style={styles.container}>
-        <Card  >
-            <Text style={{textAlign: 'center', marginTop:'10%', fontSize:25, fontFamily:'Arial'}}>Log In</Text>
-            <Card.Image
-                style={styles.avatar}
-                source={{ uri: 'https://help.twitter.com/content/dam/help-twitter/brand/logo.png' }} />
-            <View>
-                <Input onChange={(e) => { setEmail(e.nativeEvent.text); }} style={styles.input} label={'Email'} keyboardType={'email-address'} placeholder={'Email'} />
+    <ScrollView style={styles.container} showVerticalScrollIndicator={false}>
+        <ImageBackground 
+        source={require('./images/backgroundImage.jpeg')}
+        style={{height: Dimensions.get('window').height/2.5,
+    }}>
+
+        <View style={styles.brandView}>
+        <Card.Image
+    style={styles.avatar}
+    source={{ uri: 'https://help.twitter.com/content/dam/help-twitter/brand/logo.png' }} />
+         <Text style={{color: '#ffff', fontSize: 30,fontFamily:'impact',fontWeight: 'bold', textTransform:'uppercase', textAlign: 'center'  }}>Social Style</Text>
+        </View>
+        </ImageBackground>
+        
+        {/**bottomview */ }
+        <View style={styles.bottomView} >
+           <View style={{padding: 30}}>
+               <Text style={{color:'##e94560', fontSize:32, paddingBottom:10}}>Log In</Text>
+            <View style={{marginTop:50}} style={{borderColor:'#4632A1'}}>
+                
+                <Input onChange={(e) => { setEmail(e.nativeEvent.text); }} style={styles.input} label={'Email'} keyboardType={'email-address'}  />
             </View> 
             <View> 
-                <Input onChange={(e) => { setPassword(e.nativeEvent.text); }} style={styles.input} label={'Password'} secureTextEntry={true} placeholder={'Password'} />
+                <Input onChange={(e) => { setPassword(e.nativeEvent.text); }} style={styles.input} label={'Password'} secureTextEntry={true} />
             </View>
         
             <Button 
@@ -59,39 +72,67 @@ function Login({navigation, reduxSaveSessionToken, reduxUserDataName, reduxUserD
                 onPress={() => { navigation.navigate('Register'); }} >
                         Don't have Account ? Sign Up
             </Text>
-        </Card>
+            </View>
+        </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
     container:{
+        
+        /** marginTop: 80, **/
         flex: 1,
-        marginTop: 80
+        flexDirection: "column",
+        
+        
     },
-    avatar:{
+     avatar:{
         width: '80px',
         height: '80px', 
         borderRadius:'50%',
         opacity: 0.8,
         marginLeft: '40%',
-        marginTop: '5%'
-    },
+        marginTop: '5%',
+        justifyContent: "center",
+        alignItems: "center"
+    }, 
     input: {
-        height: 25,
+        borderColor:'white',
+        height: 30,
         margin: 10,
         borderWidth: 2,
         padding: 8,
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: 'center',
+        
     },
+    
     createAccount: {
         color: '#3282b8',
         fontWeight: 'bold',
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 12,
         left: '2%',
         position: 'relative',
-        top: '3%'
-    }
+        top: '3%',
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom:30
+    },
+    brandView: {
+        flex:1,
+        justifyContent: 'center',
+        paddingBottom:60,
+    },
+    bottomView: {
+        flex: 1.5,
+        backgroundColor: 'white',
+        bottom: 50,
+        borderTopStartRadius: 60,
+        borderTopEndRadius: 60,
+    },
 });
 
 const mapStateToProps = (state) => {

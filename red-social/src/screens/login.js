@@ -30,7 +30,7 @@ function Login({navigation, reduxSaveSessionToken, reduxUserDataName, reduxUserD
         {/**bottomview */ }
         <View style={styles.bottomView} >
            <View style={{padding: 30}}>
-               <Text style={{color:'##e94560', fontSize:32, paddingBottom:10}}>Log In</Text>
+               <Text style={{color:'black', fontSize:32, paddingBottom:10, marginLeft:50}}>Log In</Text>
             <View style={{marginTop:50}} style={{borderColor:'#4632A1'}}>
                 
                 <Input onChange={(e) => { setEmail(e.nativeEvent.text); }} style={styles.input} label={'Email'} keyboardType={'email-address'}  />

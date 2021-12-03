@@ -1,4 +1,4 @@
-const URI = 'http://localhost:8000'
+const URI = 'https://social-style.herokuapp.com'
 
 const createPost = async (data) => {
     let formData = new FormData();

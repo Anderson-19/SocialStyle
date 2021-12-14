@@ -1,4 +1,5 @@
-const URI = 'https://social-style.herokuapp.com';
+//const URI = 'https://social-style.herokuapp.com';
+const URI = 'http://localhost:8000';
 
 const fetchRegister = async (data) => {
     let formData = new FormData();
@@ -36,8 +37,8 @@ const fetchLogin = async (data) => {
     return await request.json();
 }
 
-const getUsers = async (sessionToken) =>{
-    let request = await fetch('http://localhost:8000/post/show', {
+const getUserProfile = async (sessionToken, user_id) =>{
+    let request = await fetch(`${URI}/users/profile/${user_id}`, {
         method: 'GET',
         headers: {
             'authToken': sessionToken,
@@ -47,4 +48,40 @@ const getUsers = async (sessionToken) =>{
     return await request.json();
 }
 
-module.exports = { fetchRegister, fetchLogin, getUsers }
+const userFollow = async (sessionToken, followingUser_id) =>{
+    let formData = new FormData();
+    formData.append('sessionToken', sessionToken);
+    formData.append('following', followingUser_id);
+
+    let request = await fetch(`${URI}/users/follow`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            "Accept": "application/json"
+        }
+    })
+    return await request.json();
+}
+
+const getFollowers = async (sessionToken, followingUser_id) =>{
+
+}
+
+const userUnFollow = async (sessionToken) =>{
+    let request = await fetch(`${URI}/users/unfollow`, {
+        method: 'DELETE',
+        headers: {
+            'authToken': sessionToken
+        }
+    })
+    return await request.json();
+}
+
+module.exports = { 
+    fetchRegister, 
+    fetchLogin, 
+    getUserProfile, 
+    getFollowers, 
+    userFollow, 
+    userUnFollow 
+}

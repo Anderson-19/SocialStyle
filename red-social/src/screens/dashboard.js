@@ -2,16 +2,19 @@ import React, { useEffect, useState} from 'react';
 import { View, StyleSheet, Pressable, ScrollView, ActivityIndicator} from 'react-native';
 import { connect } from 'react-redux';
 import { Input, Text, Icon, Avatar, Card, ListItem, Image } from 'react-native-elements';
-import { getPosts, deletePost, getSearchPosts } from '../services/postServices';
+import { getPosts, deletePost} from '../services/postServices';
+import { getComments, deleteComment } from '../services/postCommentServices';
 
 function Dashboard(props) {
     const [post, setPost] = useState([]);
+    const [comment, setComment] = useState([]);
     const [tablaPost, setTablaPost]= useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState({
         posts: '',
         users: ''
-    })
+    });
+    const [connect, setConnect] = useState(false);
 
     const getSearch = (name, value) =>{
         setSearch({...search, [name]: value})
@@ -21,9 +24,14 @@ function Dashboard(props) {
     useEffect(()=>{
         getPosts(props.sessionToken).
         then( json =>{
-           setPost(json.content)
-           setLoading(false)
-        }) 
+            setPost(json.content)
+            setLoading(false)
+
+        });
+        getComments(props.sessionToken).
+            then( json =>{
+                setComment(json.content)
+        }); 
     })
 
     const filtrar=(terminoBusqueda)=>{
@@ -64,6 +72,7 @@ function Dashboard(props) {
                 </>
             }
             />
+            <Text style={{textAlign: 'center'}}>{connect}</Text>
             {search.posts.length > 0 ? (
                 tablaPost.map(items =>{
                     return(
@@ -73,20 +82,20 @@ function Dashboard(props) {
                             <View>
                                     <Avatar
                                         source={{
-                                        uri: props.avatar,
+                                        uri: items.userAuthor.avatar,
                                         headers: {Range: 'bytes=0-'},
                                         }}
                                         rounded
                                         size={'medium'}
                                     />
-                                    <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{props.name}</Text>
+                                    <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{items.userAuthor.name+" "+items.userAuthor.lastname}</Text>
                                     <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{items.description}</Text> 
                                     <Card.Divider />
                                         <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                     <Card.Divider />
                                 </View>
                                 <View style={styles.viewStyle}>
-                                    {true ? (
+                                    {items.userAuthor.email === props.email ? (
                                         <>
                                         <Pressable
                                             onPress={()=>{
@@ -109,7 +118,7 @@ function Dashboard(props) {
                                         </Pressable>
                                         </>
                                     ) : null}
-                                    <Pressable >
+                                    <Pressable onPress={() =>{ props.navigation.navigate('PostComment',{post_id: items._id})}}>
                                         <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
                                     </Pressable>
                                     <Pressable>
@@ -143,23 +152,30 @@ function Dashboard(props) {
                             <View>
                                     <Avatar
                                         source={{
-                                        uri: props.avatar,
+                                        uri: post.userAuthor.avatar,
                                         headers: {Range: 'bytes=0-'},
                                         }}
                                         rounded
                                         size={'medium'}
                                     />
-                                    <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} >{props.name}</Text>
+                                    <Text style={{fontSize: 18, marginTop:'-10%' ,marginLeft: '20%'}} 
+                                        onPress={() =>{ 
+                                            if(post.userAuthor.email !== props.email){
+                                                props.navigation.navigate('UsersProfiles',{user_id: [post.userAuthor._id, 'true']})
+                                            }else{
+                                                props.navigation.navigate('Profile')
+                                            }
+                                        }}
+                                    >{post.userAuthor.name+" "+post.userAuthor.lastname}</Text> 
                                     <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{post.description}</Text> 
                                     <Card.Divider />
                                         <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                     <Card.Divider />
                                 </View>
                                 <View style={styles.viewStyle}>
-                                    {true ? (
+                                    {post.userAuthor.email === props.email ? (
                                         <>
-                                        <Pressable
-                                            
+                                        <Pressable   
                                             onPress={()=>{
                                                 deletePost(post._id, props.sessionToken).then(
                                                     res =>{
@@ -171,16 +187,19 @@ function Dashboard(props) {
                                                     }
                                                 )
                                             }} >
-                                            <Icon
-                                                style={styles.iconStyle}
-                                                color={'gray'}
-                                                name={'trash'}
-                                                type={'font-awesome-5'}
+        
+                                             <Avatar
+                                                source={{
+                                                uri: 'https://image.flaticon.com/icons/png/512/18/18297.png',
+                                                headers: {Range: 'bytes=0-'},
+                                                }}
+                                                rounded
+                                                size={'small'}
                                             />
                                         </Pressable>
                                         </>
                                     ) : null}
-                                    <Pressable >
+                                    <Pressable onPress={() =>{ props.navigation.navigate('PostComment',{post_id: post._id})}} >
                                         <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
                                     </Pressable>
                                     <Pressable>
@@ -200,7 +219,73 @@ function Dashboard(props) {
                                         
                                         />
                                     </Pressable>
-                                </View>
+                                    </View>
+                               {comment ? comment.map(comments =>
+                                {
+                                    if(post._id === comments.author){
+                                        return(
+                                        <ListItem key={comments._id} bottomDivider>
+                                            <ListItem.Chevron /> 
+                                            <ListItem.Content>
+                                            <View>
+                                                <Text style={{fontSize: 12}} >{comments.description}</Text> 
+                                                <Card.Divider />
+                                                    <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
+                                                <Card.Divider />
+                                            </View>
+                                            <View style={styles.viewStyle}>
+                                                {post._id === comments.author ? (
+                                                    <>
+                                                    <Pressable   
+                                                        onPress={()=>{
+                                                            deleteComment(comments._id, props.sessionToken).then(
+                                                                res =>{
+                                                                    getComments(props.sessionToken).
+                                                                    then( json =>{
+                                                                        setComment(json.content)
+                                                                        setLoading(false)
+                                                                    });
+                                                                }
+                                                            )
+                                                        }} >
+                    
+                                                        <Avatar
+                                                            source={{
+                                                            uri: 'https://image.flaticon.com/icons/png/512/18/18297.png',
+                                                            headers: {Range: 'bytes=0-'},
+                                                            }}
+                                                            rounded
+                                                            size={'small'}
+                                                        />
+                                                    </Pressable>
+                                                    </>
+                                                ) : null}
+                                                <Pressable onPress={() =>{ props.navigation.navigate('PostComment',{post_id: post._id})}} >
+                                                    <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
+                                                </Pressable>
+                                                <Pressable>
+                                                    <Icon
+                                                    style={styles.iconStyle}
+                                                    name={'thumbs-down'}
+                                                    type={'font-awesome-5'}
+                                                    color={'black'}
+                                                    />
+                                                </Pressable>
+                                                <Pressable>
+                                                    <Icon
+                                                    style={styles.iconStyle}
+                                                    name={'thumbs-up'}
+                                                    type={'font-awesome-5'}
+                                                    color={ 'black'}
+                                                    
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                            </ListItem.Content>
+                                        </ListItem> 
+                                        )
+                                    }
+                                }): null} 
                             </ListItem.Content>
                         </ListItem>
                     )

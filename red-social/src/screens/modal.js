@@ -2,6 +2,8 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UserPages from './userPages';
 import Post from './post/post';
+import PostComment from './post/postComments';
+import UsersProfiles from './profiles/usersProfiles';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +19,16 @@ function Modal() {
                name={'Post'} 
                component={Post}
                options={{title: '                       Create Post'}}
+             /> 
+            <Stack.Screen
+               name={'PostComment'} 
+               component={PostComment}
+               options={{title: '                       Commnet Post'}}
+             /> 
+             <Stack.Screen
+               name={'UsersProfiles'} 
+               component={UsersProfiles}
+               options={{title: '                       Profile'}}
              /> 
         </Stack.Navigator>
     );

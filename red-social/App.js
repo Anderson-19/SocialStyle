@@ -8,6 +8,7 @@ import Register from './src/screens/register';
 import Login from './src/screens/login';
 import Modal from './src/screens/modal';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {

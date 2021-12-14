@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 
 function Profile(props) {
   return (
-
-    <View >
+ <View >
         <View style={{marginTop:'10%', marginLeft: '40%'}}>
             <Avatar
                 source={{
@@ -18,7 +17,7 @@ function Profile(props) {
             />
         </View>
       <Text style={{fontSize: 22, marginTop:'1%' ,marginLeft: '24%', color:'black'}} >{props.name}</Text>
-  </View>
+  </View> 
    
   );
 }

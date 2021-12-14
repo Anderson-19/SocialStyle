@@ -1,7 +1,6 @@
 require('../helpers/database');
 const mp = require('multiparty');
 const jwt = require('jsonwebtoken');
-const db = require('../helpers/database');
 const { post } = require('../models/Post');
 const { user } = require('../models/User'); 
 
@@ -31,10 +30,24 @@ const getPosts = async (req, res) =>{
     try {
         let verify = jwt.verify(token, process.env.JWT_SECRET);
         if(verify.connect){
-            await post.find({author:{$eq:verify.id}}).
-            then(posts => {
-                res.status(200).json({verify: true, content: posts }) 
-            });
+            //await post.find({/* author:{$eq:verify.id} */}).
+            //then(posts => {
+            //    res.status(200).json({verify: true, content: posts })  
+            //});
+            let join = await post.aggregate(
+                [
+                    {$lookup:
+                        {
+                            from: 'users',
+                            localField: 'author',
+                            foreignField: '_id',
+                            as: 'userAuthor'
+                        }
+                    },
+                    {$unwind: '$userAuthor'}
+                ]
+            );
+            res.status(200).json({verify: true, content: join }) 
         }else{
             res.status(400).json({verify: false, text: 'Error'});
         }
@@ -45,14 +58,12 @@ const getPosts = async (req, res) =>{
 
 const getPost = async (req, res) =>{
     let token = req.headers.authtoken;
-    console.log(req.params.id)
     try {
         let verify = jwt.verify(token, process.env.JWT_SECRET);
         if(verify.connect){   
-            await post.findOne({_id:{$eq:req.params.id}}).
-            then(posts => {
-                res.status(200).json({verify: true, content: posts }) 
-            }); 
+            let posts = await post.findOne({_id:{$eq:req.params.id}}) 
+            let xuser = await user.findOne({_id:{$eq:posts.author}});
+            res.status(200).json({verify: false, contentPost: posts, contentUser: xuser});
         }else{
             res.status(400).json({verify: false, text: 'Error'});
         }

@@ -34,9 +34,9 @@ const userSchema = new mongoose.Schema(
         avatar:{
             type: String,
             require:true
-        },
+        }/* ,
         followers:[],
-        following: []
+        following: [] */
     },
     {
         timestamps:true,

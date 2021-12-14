@@ -4,6 +4,7 @@ const db = require('../helpers/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { user } = require('../models/User'); 
+const { followers } = require('../models/Followers')
 
 const userRegistration = (req, res) => {
     let form = new mp.Form();
@@ -89,7 +90,71 @@ const verifyCredentials = async (email, password) => {
     }
 }
 
+const getUserProfile = async (req, res) =>{
+    let token = req.headers.authtoken;
+    try {
+        let verify = jwt.verify(token, process.env.JWT_SECRET);
+        if(verify.connect){   
+            let xuser = await user.findOne({_id:{$eq:req.params.id}});
+            let xfollower = await followers.findOne({following:{$eq:req.params.id}});
+            res.status(200).json({verify: true, contentUser: xuser, contentFollower: xfollower});
+        }else{
+            res.status(400).json({verify: false, text: 'Error'});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const userFollower = (req, res) => {
+    let form = new mp.Form();
+    form.parse(req, (error, fields, files) => {
+        if (error){
+            res.status(400).json({title: 'Error', content: error.message});
+        }
+        else{
+            let {sessionToken, following} = fields
+            try {
+                let verify = jwt.verify(sessionToken[0], process.env.JWT_SECRET);
+                if(verify.connect){   
+                    console.log(verify.id)
+                    followers.create({ follower: verify.id, following: following });
+                    res.status(200).json({verify: true});
+                }else{
+                    res.status(400).json({verify: false, text: 'Error'});
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    })
+}
+
+const userUnFollow = async (req, res) =>{
+    let token = req.headers.authtoken;
+    try {
+        let verify = jwt.verify(token, process.env.JWT_SECRET);
+        if(verify.connect){
+            await followers.deleteOne(
+                {
+                    follower: verify.id
+                }
+            )
+            res.status(200).json({verify: true}) 
+        }else{
+            res.status(400).json({verify: false, text: 'Error'});
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+
+}
+
+
 module.exports = {
     userRegistration,
-    userLogin
+    userLogin,
+    getUserProfile,
+    userFollower,
+    userUnFollow
 }

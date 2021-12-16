@@ -48,20 +48,20 @@ useEffect(() =>{
         <View >
           <Card >
             <Avatar
-                containerStyle={{marginTop: "-2%"}}
+                containerStyle={{marginTop: "0%", marginBottom:'4%'}}
                 source={{
                 /* uri: 'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_960_720.png', */
                 uri: user.avatar,
                 headers: {Range: 'bytes=0-'},
                 }}
                 rounded
-                size={'small'}
+                size={'large'}
             />
-            <Text style={{fontSize: 18, marginTop:'-8%' ,marginLeft: '12%'}} >{user.name+" "+user.lastname}</Text>
+            <Text style={{fontSize: 22, marginTop:'-10%' ,marginLeft: '14%',marginBottom:'3%'}} >{"@"+user.name}</Text>
             <Card.Divider style={{paddingTop: 12}}/>
             <Text style={{fontSize: 18}} >{post.description}</Text>
             <Text style={{fontSize: 15, marginLeft: '70%'}} >{post.createdAt.split('T')[0].split('-')[2]+"-"+post.createdAt.split('T')[0].split('-')[1]+"-"+post.createdAt.split('T')[0].split('-')[0]}</Text>
-            <Text style={{fontSize: 15}} >commenting on {user.email}</Text>
+            <Text style={{fontSize: 15}} >Commenting on {user.email}</Text>
             <Card.Divider style={{paddingTop: 8}}/>
             <Input
                 multiline

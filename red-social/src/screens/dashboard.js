@@ -170,7 +170,7 @@ function Dashboard(props) {
                                             }
                                         }}
                                     >{"@"+post.userAuthor.name+" "+post.userAuthor.lastname}</Text> 
-                                    <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{post.description}</Text> 
+                                    <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '8%'}} >{post.description}</Text> 
                                     <Card.Divider />
                                         <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                     <Card.Divider />
@@ -227,11 +227,11 @@ function Dashboard(props) {
                                 {
                                     if(post._id === comments.author){
                                         return(
-                                        <ListItem key={comments._id} bottomDivider>
+                                        <ListItem key={comments._id} style={styles.bottomDivider}>
                                             <ListItem.Chevron /> 
                                             <ListItem.Content>
                                             <View style={{backgroundColor:'#4A5050' , borderColor:'#000000'}}>
-                                                <Text style={{fontSize: 14,color:'#FFFFFF', marginBottom:2}} >{comments.description}</Text> 
+                                                <Text style={{fontSize: 14,color:'#FFFFFF', marginBottom:2, marginLeft:'5%'}} >{comments.description}</Text> 
                                                 <Card.Divider />
                                                     <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                                 <Card.Divider />
@@ -328,7 +328,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 14,
         fontStyle: 'italic',
-        marginLeft: 25
+        marginLeft: 10,
+        marginTop:5
     },
     iconStyle:{
         paddingLeft: 5,
@@ -337,14 +338,21 @@ const styles = StyleSheet.create({
     },
     viewStyle:{
         display: 'flex',
-        flex: 1.5,
+        flex: 1,
         flexDirection: 'row-reverse',
-        marginBottom: 10,
+        marginBottom: 5,
+        padding: 2,
         backgroundColor:'#3282b8',
         borderColor:'#000000',
         borderBottomStartRadius: 20, 
-        borderBottomEndRadius:20
+        
+    },
+    bottomDivider: {
+        marginLeft:'15%',
+        
+        
     }
+
 });
 
 const mapStateToProps = (state) => {

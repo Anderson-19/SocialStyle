@@ -149,8 +149,10 @@ function Dashboard(props) {
                         <ListItem key={post._id} bottomDivider>
                             <ListItem.Chevron /> 
                             <ListItem.Content >
-                                <View style={{backgroundColor:'#3282b8'}}>
-                            <View style={{backgroundColor:'#A6A1A0'}}>
+                                <View style={{backgroundColor:'#3282b8',flex:1.5, borderTopStartRadius: 30,
+        borderTopEndRadius: 40}}>
+                            <View style={{backgroundColor:'#A6A1A0', flex:1.5, borderTopStartRadius: 60,
+        borderTopEndRadius: 60}}>
                                     <Avatar
                                         source={{
                                         uri: post.userAuthor.avatar,
@@ -228,8 +230,8 @@ function Dashboard(props) {
                                         <ListItem key={comments._id} bottomDivider>
                                             <ListItem.Chevron /> 
                                             <ListItem.Content>
-                                            <View style={{backgroundColor:'#B8B8B8' , borderColor:'#000000'}}>
-                                                <Text style={{fontSize: 12, marginBottom:2}} >{comments.description}</Text> 
+                                            <View style={{backgroundColor:'#4A5050' , borderColor:'#000000'}}>
+                                                <Text style={{fontSize: 14,color:'#FFFFFF', marginBottom:2}} >{comments.description}</Text> 
                                                 <Card.Divider />
                                                     <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                                 <Card.Divider />
@@ -335,11 +337,13 @@ const styles = StyleSheet.create({
     },
     viewStyle:{
         display: 'flex',
-        flex: 1,
+        flex: 1.5,
         flexDirection: 'row-reverse',
-        margin: 10,
+        marginBottom: 10,
         backgroundColor:'#3282b8',
-        borderColor:'#000000'
+        borderColor:'#000000',
+        borderBottomStartRadius: 20, 
+        borderBottomEndRadius:20
     }
 });
 

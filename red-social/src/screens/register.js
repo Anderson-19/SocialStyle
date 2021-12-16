@@ -65,7 +65,7 @@ export default function register(props) {
             <Input onChangeText={(value) => {setDate(value)}} label={'Date Of Birth'} style={styles.input}></Input>
         </View>
     
-        <Button title={buttonTitle} onPress={() =>{
+        <Button style={{textAlign: 'center'}} title={buttonTitle} onPress={() =>{
             setButtonTitle('');
             setLoading(true);
             let data = {
@@ -115,6 +115,8 @@ const styles = StyleSheet.create({
     }, 
     input: {
         height: 30,
+        marginTop: 0,
+        marginBottom: 0,
         margin: 20,
         borderWidth: 2,
         padding: 2,

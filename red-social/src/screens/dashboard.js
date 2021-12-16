@@ -148,8 +148,9 @@ function Dashboard(props) {
                     return(
                         <ListItem key={post._id} bottomDivider>
                             <ListItem.Chevron /> 
-                            <ListItem.Content>
-                            <View>
+                            <ListItem.Content >
+                                <View style={{backgroundColor:'#3282b8'}}>
+                            <View style={{backgroundColor:'#A6A1A0'}}>
                                     <Avatar
                                         source={{
                                         uri: post.userAuthor.avatar,
@@ -166,7 +167,7 @@ function Dashboard(props) {
                                                 props.navigation.navigate('Profile')
                                             }
                                         }}
-                                    >{post.userAuthor.name+" "+post.userAuthor.lastname}</Text> 
+                                    >{"@"+post.userAuthor.name+" "+post.userAuthor.lastname}</Text> 
                                     <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{post.description}</Text> 
                                     <Card.Divider />
                                         <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
@@ -227,8 +228,8 @@ function Dashboard(props) {
                                         <ListItem key={comments._id} bottomDivider>
                                             <ListItem.Chevron /> 
                                             <ListItem.Content>
-                                            <View>
-                                                <Text style={{fontSize: 12}} >{comments.description}</Text> 
+                                            <View style={{backgroundColor:'#B8B8B8' , borderColor:'#000000'}}>
+                                                <Text style={{fontSize: 12, marginBottom:2}} >{comments.description}</Text> 
                                                 <Card.Divider />
                                                     <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
                                                 <Card.Divider />
@@ -286,7 +287,9 @@ function Dashboard(props) {
                                         )
                                     }
                                 }): null} 
+                                </View>
                             </ListItem.Content>
+                            
                         </ListItem>
                     )
                 })
@@ -319,7 +322,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     textActions:{
-        color: '#00aae4',
+        color: '#fff',
         fontWeight: 'bold',
         fontSize: 14,
         fontStyle: 'italic',
@@ -335,6 +338,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row-reverse',
         margin: 10,
+        backgroundColor:'#3282b8',
+        borderColor:'#000000'
     }
 });
 

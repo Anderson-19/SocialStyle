@@ -40,7 +40,8 @@ function Login({navigation, reduxSaveSessionToken, reduxUserDataName, reduxUserD
             </View>
         
             <Button 
-                containerStyle={{padding: 25}}
+                containerStyle={{padding: 25, textAlign: 'center'}}
+                
                 title={buttonTitle}
                 disabled={loading}
                 icon={<ActivityIndicator color={'#e94560'} animating={loading} />}

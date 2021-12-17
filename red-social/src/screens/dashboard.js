@@ -4,35 +4,48 @@ import { connect } from 'react-redux';
 import { Input, Text, Icon, Avatar, Card, ListItem, Image } from 'react-native-elements';
 import { getPosts, deletePost} from '../services/postServices';
 import { getComments, deleteComment } from '../services/postCommentServices';
+import { giveLike, giveDislike, getLikes } from '../services/actionServices';
 
 function Dashboard(props) {
     const [post, setPost] = useState([]);
+    const [like, setLike] = useState([]);
+    const [countLike, setCountLike] = useState(0);
     const [comment, setComment] = useState([]);
     const [tablaPost, setTablaPost]= useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(null);
     const [search, setSearch] = useState({
         posts: '',
         users: ''
     });
-    const [connect, setConnect] = useState(false);
-
+    const [bool, setBool] = useState(false);
     const getSearch = (name, value) =>{
         setSearch({...search, [name]: value})
         filtrar(search.posts);
     }
 
     useEffect(()=>{
-        getPosts(props.sessionToken).
-        then( json =>{
-            setPost(json.content)
-            setLoading(false)
-
-        });
-        getComments(props.sessionToken).
+        
+        if(like || comment || post){
+            getPosts(props.sessionToken).
             then( json =>{
-                setComment(json.content)
-        }); 
-    })
+                setPost(json.content)
+                setLoading(false)
+    
+            });
+    
+            getLikes(props.sessionToken).
+            then( json =>{
+                setLike(json.content);
+                setCountLike(json.countLikes);
+            });
+    
+             getComments(props.sessionToken).
+                then( json =>{
+                    setComment(json.content)
+            });   
+        }
+
+    }, [like || comment || post])
 
     const filtrar=(terminoBusqueda)=>{
         let resultadosBusqueda = post.filter((elemento)=>{
@@ -163,18 +176,18 @@ function Dashboard(props) {
                                             if(post.userAuthor.email !== props.email){
                                                 props.navigation.navigate('UsersProfiles',{user_id: [post.userAuthor._id, 'true']})
                                             }else{
-                                                props.navigation.navigate('Profile')
+                                                props.navigation.navigate('Profile',{user_id: post.userAuthor._id})
                                             }
                                         }}
                                     >{post.userAuthor.name+" "+post.userAuthor.lastname}</Text> 
                                     <Text style={{fontSize: 16, marginTop:'8%' ,marginLeft: '-1%'}} >{post.description}</Text> 
                                     <Card.Divider />
-                                        <Text style={ styles.textActions }>{`${1} likes   |   ${1} dislikes   |   ${1} comments`}</Text>
-                                    <Card.Divider />
+                                        
                                 </View>
                                 <View style={styles.viewStyle}>
                                     {post.userAuthor.email === props.email ? (
                                         <>
+                                        <Text style={ styles.textActions }>{`${countLike} likes  |  ${comment.length} comments`}</Text>
                                         <Pressable   
                                             onPress={()=>{
                                                 deletePost(post._id, props.sessionToken).then(
@@ -188,39 +201,81 @@ function Dashboard(props) {
                                                 )
                                             }} >
         
-                                             <Avatar
-                                                source={{
-                                                uri: 'https://image.flaticon.com/icons/png/512/18/18297.png',
-                                                headers: {Range: 'bytes=0-'},
-                                                }}
-                                                rounded
-                                                size={'small'}
-                                            />
+                                        <Icon
+                                            style={styles.iconStyle}
+                                            name={'trash-alt'}
+                                            type={'font-awesome-5'}
+                                            color={'black'}
+                                        />
                                         </Pressable>
                                         </>
-                                    ) : null}
+                                    ) : (
+                                        <>
+                                        <Text style={ styles.textActions }>{`${0} likes  |  ${0} comments`}</Text>
+                                          <Icon
+                                          onPress={() => props.navigation.navigate('UsersProfiles',{user_id: [post.userAuthor._id, 'true']})} 
+                                            style={styles.iconStyle}
+                                            name={'user'}
+                                            type={'font-awesome-5'}
+                                            color={'black'}
+                                          />
+                                        </>
+                                    )}
                                     <Pressable onPress={() =>{ props.navigation.navigate('PostComment',{post_id: post._id})}} >
                                         <Icon style={styles.iconStyle} name={'comment'} type={'font-awesome-5'} />
                                     </Pressable>
-                                    <Pressable>
+                                    {bool && post.userAuthor.email === props.email? (
+                                        <Pressable
+                                        onPress={() =>{
+                                            setBool(false);
+                                            console.log(bool)
+                                            let xlikes = like.find( likes => likes.post_id === post._id)
+                                            giveDislike(props.sessionToken, xlikes._id).then(
+                                                res =>{
+                                                    
+                                                    if(res.verify){
+                                                        getLikes(props.sessionToken).
+                                                        then( json =>{
+                                                            
+                                                            setLike(json.content);
+                                                            setCountLike(json.countLikes);
+                                                        });
+                                                    }
+                                                }
+                                            )
+                                        }}
+                                    >
                                         <Icon
                                         style={styles.iconStyle}
                                         name={'thumbs-down'}
                                         type={'font-awesome-5'}
                                         color={'black'}
                                         />
-                                    </Pressable>
-                                    <Pressable>
-                                        <Icon
-                                        style={styles.iconStyle}
-                                        name={'thumbs-up'}
-                                        type={'font-awesome-5'}
-                                        color={ 'black'}
-                                        
-                                        />
-                                    </Pressable>
+
+                                    </Pressable>      
+                                    ):(
+                                        <Pressable
+                                            onPress={() => {
+                                                setBool(true);
+                                                console.log(bool)
+                                                giveLike(props.sessionToken, post._id).
+                                                then(json => {
+                                                    
+                                                });
+                                            }}
+                                        >
+                                            <Icon
+                                            style={styles.iconStyle}
+                                            name={'thumbs-up'}
+                                            type={'font-awesome-5'}
+                                            color={ 'black'}
+                                            />
+                                        </Pressable>
+                                            
+                                    )}
+
                                     </View>
-                               {comment ? comment.map(comments =>
+                                 {comment ? comment.map(comments =>
                                 {
                                     if(post._id === comments.author){
                                         return(
@@ -249,13 +304,11 @@ function Dashboard(props) {
                                                             )
                                                         }} >
                     
-                                                        <Avatar
-                                                            source={{
-                                                            uri: 'https://image.flaticon.com/icons/png/512/18/18297.png',
-                                                            headers: {Range: 'bytes=0-'},
-                                                            }}
-                                                            rounded
-                                                            size={'small'}
+                                                        <Icon
+                                                            style={styles.iconStyle}
+                                                            name={'trash-alt'}
+                                                            type={'font-awesome-5'}
+                                                            color={'black'}
                                                         />
                                                     </Pressable>
                                                     </>
@@ -285,7 +338,7 @@ function Dashboard(props) {
                                         </ListItem> 
                                         )
                                     }
-                                }): null} 
+                                }): null}   
                             </ListItem.Content>
                         </ListItem>
                     )
@@ -321,9 +374,11 @@ const styles = StyleSheet.create({
     textActions:{
         color: '#00aae4',
         fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: -15,
         fontSize: 14,
         fontStyle: 'italic',
-        marginLeft: 25
+        marginLeft: 15
     },
     iconStyle:{
         paddingLeft: 5,

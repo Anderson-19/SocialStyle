@@ -48,6 +48,7 @@ const getUserProfile = async (sessionToken, user_id) =>{
     return await request.json();
 }
 
+
 const userFollow = async (sessionToken, followingUser_id) =>{
     let formData = new FormData();
     formData.append('sessionToken', sessionToken);
@@ -63,7 +64,15 @@ const userFollow = async (sessionToken, followingUser_id) =>{
     return await request.json();
 }
 
-const getFollowers = async (sessionToken, followingUser_id) =>{
+const getUsersFollowing = async (sessionToken) =>{
+    let request = await fetch(`${URI}/users/followers/`, {
+        method: 'GET',
+        headers: {
+            'authToken': sessionToken,
+            "Accept": "application/json"
+        }
+    })
+    return await request.json();
 
 }
 
@@ -77,11 +86,36 @@ const userUnFollow = async (sessionToken) =>{
     return await request.json();
 }
 
+
+const updateUserProfile = async (data, sessionToken) => {
+
+    let xdata = {
+        token: sessionToken,
+        name: data.name,
+        username: data.username,
+        lastname: data.lastname,
+        location: data.location,
+        date: data.date,
+        avatar: data.avatar,
+        bio: data.bio
+    }
+    
+    let request = await fetch(`${URI}/users/editProfile`, {
+        method: 'PUT',
+        body: JSON.stringify(xdata),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    return await request.json();
+}
+
 module.exports = { 
     fetchRegister, 
     fetchLogin, 
     getUserProfile, 
-    getFollowers, 
+    getUsersFollowing, 
     userFollow, 
-    userUnFollow 
+    userUnFollow ,
+    updateUserProfile
 }

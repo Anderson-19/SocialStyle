@@ -13,8 +13,13 @@ function Profile(props) {
         getUserProfile(props.sessionToken, props.route.params.user_id[0]).then(
             res =>{
                 setUserProfile(res.contentUser);
-                if(res.contentFollower.following === props.route.params.user_id[0]){
-                    setButtonTitle('Following')
+                if(res.contentFollower){
+                    if(res.contentFollower.following === props.route.params.user_id[0]){
+                        console.log(res.contentFollower.following, props.route.params.user_id[0])
+                        setButtonTitle('Following')
+                    }else{
+                        setButtonTitle('Follow')
+                    } 
                 }else{
                     setButtonTitle('Follow')
                 }

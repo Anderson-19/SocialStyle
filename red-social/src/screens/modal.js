@@ -4,6 +4,7 @@ import UserPages from './userPages';
 import Post from './post/post';
 import PostComment from './post/postComments';
 import UsersProfiles from './profiles/usersProfiles';
+import EditProfile from './profiles/editProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,12 +24,17 @@ function Modal() {
             <Stack.Screen
                name={'PostComment'} 
                component={PostComment}
-               options={{title: '                       Commnet Post'}}
+               options={{title: '                       '}}
              /> 
              <Stack.Screen
                name={'UsersProfiles'} 
                component={UsersProfiles}
-               options={{title: '                       Profile'}}
+               options={{title: '                       '}}
+             /> 
+             <Stack.Screen
+               name={'EditProfile'} 
+               component={EditProfile}
+               options={{title: '                       '}}
              /> 
         </Stack.Navigator>
     );

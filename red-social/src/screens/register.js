@@ -14,13 +14,7 @@ export default function register(props) {
     let [date, setDate] = useState('');
     let [buttonTitle, setButtonTitle] = useState('Register');
     let [loading, setLoading] = useState(false);
-    /* let [fileURI, setFileURI] = useState(null);
-    let [type, setType] = useState('jpg');
 
-    const fileInput = (data) => {
-        setType(data.type);
-        setFileURI(data.uri);
-    } */
   return (
     <ScrollView>
         <ImageBackground 

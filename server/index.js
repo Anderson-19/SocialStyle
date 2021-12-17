@@ -8,6 +8,7 @@ const app = express();
 const authRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const postCommentRoutes = require("./routes/postCommentRoutes");
+const likePostRoutes = require("./routes/actionsRoutes");
 
 let whitelist = ['http://localhost:19006/'];
 const port = process.env.PORT || 8000;
@@ -33,6 +34,7 @@ app.use(express.urlencoded({extended: false}));
 app.use("/users",authRoutes);
 app.use("/users",authRoutes);
 app.use("/users",authRoutes);
+app.use("/users",authRoutes);
 
 // ---- Follower
 app.use("/users",authRoutes);
@@ -51,6 +53,11 @@ app.use("/post",postRoutes);
 app.use("/postComment",postCommentRoutes);
 app.use("/postComment",postCommentRoutes);
 app.use("/postComment",postCommentRoutes);
+
+// ---- ACTIONS
+app.use("/action",likePostRoutes);
+app.use("/action",likePostRoutes);
+app.use("/action",likePostRoutes);
 
 
 app.listen(port, () => {

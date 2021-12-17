@@ -1,6 +1,5 @@
 require('../helpers/database');
 const mp = require('multiparty');
-const db = require('../helpers/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { user } = require('../models/User'); 
@@ -147,14 +146,70 @@ const userUnFollow = async (req, res) =>{
     } catch (error) {
         console.log(error);
     } 
-
 }
 
+const getUsersFollowing = async (req, res) =>{
+    let token = req.headers.authtoken;
+    try {
+        let verify = jwt.verify(token, process.env.JWT_SECRET);
+        if(verify.connect){  
+            let xfollower = await followers.aggregate(
+                [
+                    {$lookup:
+                        {
+                            from: 'users',
+                            localField: 'following',
+                            foreignField: '_id',
+                            as: 'userFollower'
+                        }
+                    },
+                    {$unwind: '$userFollower'}
+                ]
+            ); 
+            let xuser = await user.findOne({_id:{$eq:verify.id}});
+            res.status(200).json({verify: true, contentFollower: xfollower, contentUser: xuser});
+        }else{
+            res.status(400).json({verify: false, text: 'Error'});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const updateUserProfile = async (req, res) =>{
+    try {
+        let verify = jwt.verify(req.body.token, process.env.JWT_SECRET);
+        if(verify.connect){
+            await user.updateOne(
+                {
+                    _id: verify.id
+                },
+                {
+                    name: req.body.username,
+                    username: req.body.name,
+                    lastname: req.body.lastname,
+                    location: req.body.location,
+                    date: req.body.date,
+                    avatar: req.body.avatar,
+                    bio: req.body.bio
+                }
+            )
+            res.status(200).json({verify: true}) 
+        }else{
+            res.status(400).json({verify: false, text: 'Error'});
+        }
+    } catch (error) {
+        console.log(error);
+    } 
+
+}
 
 module.exports = {
     userRegistration,
     userLogin,
     getUserProfile,
+    getUsersFollowing,
     userFollower,
-    userUnFollow
+    userUnFollow,
+    updateUserProfile
 }

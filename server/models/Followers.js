@@ -4,13 +4,9 @@ const followersSchema = new mongoose.Schema(
 	{
 		follower:{
 			type: mongoose.Types.ObjectId,
-			require:true,
-            unique:true
 		},
         following:{
 			type: mongoose.Types.ObjectId,
-			require:true,
-            unique:true
 		}
 	},
     {
